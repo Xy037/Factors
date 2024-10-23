@@ -8,48 +8,16 @@ def instructions():
     statement_generator("Instructions", "-")
 
     print('''
-Instructions go here. 
-- Type the file type that you want to assess.
-- Types of files are: Image, Integer, and Text. 
-- (For image)type the Width and Height to find out the number of bits in the image.
-- If you want to exit the program type "xxx".   
-    ''')
+    To use this program simply enter an integer between 
+    1 and 200.  The program will show the factors of your
+    chosen integer.
 
+    It will also tell you if your chosen number...
+    - is a prime number (ie: it has two factors)
+    - is a perfect square 
 
-# asks users for file type (integer / image / text / xxx)
-def get_filetype():
-    while True:
-        response = input("File type: ").lower()
-
-        # check for 'i' or the exit code
-        if response == "xxx" or response == "i":
-            return response
-
-        # check if it's an integer
-        elif response in ['integer', 'int']:
-            return "integer"
-
-        # check for an image...
-        elif response in ['image', 'picture', 'img', 'p']:
-            return "image"
-
-        # check for text...
-        elif response in ["text", 'txt', 't']:
-            return "text"
-
-        # if the response is invalid output an error
-        else:
-            print("Sorry, please choose integer, text or image")
-
-
-# Main routine goes here
-
-# Display instructions if requested
-want_instructions = input("Press <enter> to read the instructions "
-                          "or any key to continue ")
-
-if want_instructions == "":
-    instructions()
+    To exit the program, please type 'xxx'.
+        ''')
 
 
 # enter a number that is more than zero
@@ -73,12 +41,84 @@ def num_check(question):
 
         except ValueError:
             print(error)
+            print(error)
 
 
-# Main routine goes here
+# Works out factors, returns sorted list
+def factor(var_to_factor):
+    factors_list = []
+
+    # square root the number to work out when to stop looping.
+    stop = var_to_factor ** 0.5
+    stop = int(stop)
+
+    for item in range(1, stop + 1):
+
+        # check to see if the item is a factor
+        if to_factor % item == 0:
+            factors_list.append(item)
+
+            # Calculate partner
+            partner = to_factor // item
+
+            # Add partner to the list (but prevent duplicate entries)
+            if partner != item:
+                factors_list.append(partner)
+
+    # return the sorted list
+    factors_list.sort()
+    return factors_list
+
+
+# Main Routine Goes Here
+
+statement_generator("The Ultimate Factor Finder", "-")
+
+# Display instructions if requested
+want_instructions = input("\nPress <enter> to read the instructions "
+                          "or any key to continue ")
+
+if want_instructions == "":
+    instructions()
+
 while True:
-    to_factor = num_check("To factors: ")
-    print("You chose to factor", to_factor)
+
+    comment = ""
+    # ask user for number to be factorised
+    to_factor = num_check("\nEnter an integer (or xxx to quit): ")
 
     if to_factor == "xxx":
         break
+
+        # get factors for integers that are 2 or more
+    elif to_factor != 1:
+        all_factors = factor(to_factor)
+
+    # Set up comment for unity
+    else:
+        all_factors = ""
+        comment = "One is UNITY! It only has one factor. Itself :)"
+
+    # comments for squares / primes
+
+    # Prime numbers have only two factors
+    if len(all_factors) == 2:
+        comment = f"{to_factor} is a prime number"
+
+    # check if the list has an odd number of factors
+    elif len(all_factors) % 2 == 1:
+        comment = f"{to_factor} is a perfect square"
+
+    # Set up headings
+    if to_factor > 1:
+        heading = f"Factors of {to_factor}"
+    else:
+        heading = "One is special..."
+
+    # output factors and comments
+    print()
+    statement_generator(heading, "*")
+    print(all_factors)
+    print(comment)
+
+print("Thank you for using the factors calculator")
